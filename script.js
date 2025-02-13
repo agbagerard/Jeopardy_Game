@@ -36,6 +36,18 @@ function initBoard() {
   }
 }
 
+function buildCategories() {
+  const fetchReq = fetch(
+    `https://rithm-jeopardy.herokuapp.com/api/category?id=2`
+  ).then((res) => res.json())
+
+  const allData = Promise.all([fetchReq])
+
+  allData.then((res) => {
+    console.log(res)
+  })
+}
+
 function getClue() {
   console.log('have a nice day')
 }

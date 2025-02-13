@@ -54,3 +54,12 @@ span {
   height: 100px;
   flex: 1;
 }
+
+.category-box {
+  display: flex;
+  border: 2px solid burlywood;
+  border-radius: 5px;
+  margin: 5px;
+  height: 100px;
+  flex: 1;
+}

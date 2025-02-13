@@ -26,40 +26,48 @@ span {
   flex-direction: column;
   width: 75vw;
   margin: 10px auto;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 
 #category-row {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  border: 2px solid orange;
+  /* border: 2px solid orange; */
 }
 
 #clue-board {
   flex-direction: column;
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
 }
 
 .clue-row {
   display: flex;
-  border: 2px solid violet;
+  /* border: 2px solid violet; */
 }
 
-.clue-box {
+.clue-box,
+.category-box {
   display: flex;
-  border: 2px solid green;
+  align-items: center; /*vertical*/
+  justify-content: center; /*horizontal*/
+  border: 2px solid burlywood;
+  background-color: rgb(223, 233, 229);
+  color: rgb(68, 27, 27);
   border-radius: 5px;
   margin: 5px;
+  font-size: 2 rem;
+  font-weight: bold;
   height: 100px;
   flex: 1;
+  text-transform: uppercase;
 }
 
 .category-box {
-  display: flex;
-  border: 2px solid burlywood;
-  border-radius: 5px;
-  margin: 5px;
-  height: 100px;
-  flex: 1;
+  font-size: 0.8rem;
+  line-height: 25px;
+}
+
+.clicked-box {
+  font-size: 1rem;
 }

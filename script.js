@@ -2,7 +2,11 @@
 initCategoryRow()
 initBoard()
 
-document.querySelector('button').addEventListener('click', buildCategories)
+const button = document.querySelector('button')
+button.addEventListener('click', () => {
+  buildCategories()
+  button.innerText = 'Restart Game!'
+})
 
 //CREATE CATEGORY ROW
 function initCategoryRow() {
@@ -25,7 +29,7 @@ function initBoard() {
 
   for (let i = 0; i < 5; i++) {
     let row = document.createElement('div')
-    let boxValue = 200 * (i + 1)
+    let boxValue = 100 * (i + 1)
     row.className = 'clue-row'
 
     for (let j = 0; j < 6; j++) {
@@ -44,6 +48,10 @@ function initBoard() {
 let categoryArray = []
 
 function buildCategories() {
+  if (!(document.getElementById('category-row').firstChild.innerText == '')) {
+    resetBoard()
+  }
+
   const fetchReq1 = fetch(
     `https://rithm-jeopardy.herokuapp.com/api/category?id=2`
   ).then((res) => res.json())
@@ -61,11 +69,11 @@ function buildCategories() {
   ).then((res) => res.json())
 
   const fetchReq5 = fetch(
-    `https://rithm-jeopardy.herokuapp.com/api/category?id=9`
+    `https://rithm-jeopardy.herokuapp.com/api/category?id=6`
   ).then((res) => res.json())
 
   const fetchReq6 = fetch(
-    `https://rithm-jeopardy.herokuapp.com/api/category?id=10`
+    `https://rithm-jeopardy.herokuapp.com/api/category?id=14`
   ).then((res) => res.json())
 
   const allData = Promise.all([
@@ -82,6 +90,23 @@ function buildCategories() {
     categoryArray = res
     setCategories(categoryArray)
   })
+}
+
+//RESET BOARD AND $$ AMOUNT IF NEEDED
+function resetBoard() {
+  let clueParent = document.getElementById('clue-board')
+  while (clueParent.firstChild) {
+    clueParent.removeChild(clueParent.firstChild)
+  }
+
+  let categoriesParent = document.getElementById('category-row')
+  while (categoriesParent.firstChild) {
+    categoriesParent.removeChild(categoriesParent.firstChild)
+  }
+
+  document.getElementById('score').innerText = 0
+  initBoard()
+  initCategoryRow()
 }
 
 //LOAD CATEGORIES TO THE BOARD
@@ -109,4 +134,36 @@ function getClue(event) {
   })
   console.log(clue)
   showQuestion(clue, child, boxValue)
+}
+
+//SHOW QUESTION TO USER AND GET THEIR ANSWER!
+function showQuestion(clue, target, boxValue) {
+  let userAnswer = prompt(clue.question).toLowerCase()
+  let correctAnswer = clue.answer.toLowerCase()
+  let possiblePoints = +boxValue // turn string into integer
+  target.innerHTML = clue.answer
+  target.removeEventListener('click', getClue, false)
+  evaluateAnswer(userAnswer, correctAnswer, possiblePoints)
+}
+
+//EVALUATE ANSWER AND SHOW TO USER TO CONFIRM
+function evaluateAnswer(userAnswer, correctAnswer, possiblePoints) {
+  let checkAnswer = userAnswer == correctAnswer ? 'correct' : 'incorrect'
+  let confirmAnswer = confirm(
+    `For ${possiblePoints}, you answered "${userAnswer}", and the correct answer was "${correctAnswer}". Your answer appears to be ${checkAnswer}. Click Ok to accept or click Cancel if the answer was not properly evaluated.`
+  )
+  awardPoint(checkAnswer, confirmAnswer, possiblePoints)
+}
+
+//AWARD POINTS
+function awardPoint(checkAnswer, confirmAnswer, possiblePoints) {
+  if (!(checkAnswer == 'incorrect' && confirmAnswer == true)) {
+    // award points
+    let target = document.getElementById('score')
+    let currentScore = +target.innerText //turn string into integer
+    currentScore += possiblePoints
+    target.innerText = currentScore
+  } else {
+    alert('No points awarded!')
+  }
 }
